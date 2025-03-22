@@ -8,6 +8,6 @@ public class MrstreamifyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MrstreamifyApplication.class, args);
+		System.out.println("running");
 	}
-
 }
