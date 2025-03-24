@@ -1,5 +1,6 @@
 package com.hd.api.mrstreamify.controller;
 
+import com.hd.api.mrstreamify.dto.ApiResponseDto;
 import com.hd.api.mrstreamify.entity.Video;
 import com.hd.api.mrstreamify.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +12,32 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/convert")
+@SuppressWarnings("unused")
 public class ConverterController {
 
     @Autowired
     VideoService videoSerivce;
     @PostMapping("/")
-    public ResponseEntity<?> SaveVideo(@RequestParam("video")MultipartFile video){
+    public ResponseEntity<ApiResponseDto<Video>> SaveVideo(@RequestParam("video")MultipartFile video){
         Optional<Video> savedVideo =  videoSerivce.saveVideo(video);
-        return savedVideo.isPresent()?
-                ResponseEntity.ok(savedVideo.get()) :
-                ResponseEntity
+        return savedVideo
+                .map(videoObj -> ResponseEntity
+                        .ok(ApiResponseDto
+                                .<Video>builder()
+                                .data(videoObj)
+                                .success(true)
+                                .message("Video Saved Successfully")
+                                .build()
+                        )
+                )
+                .orElseGet(()-> ResponseEntity
                         .internalServerError()
-                        .body("Video saving failed");
+                        .body(ApiResponseDto
+                                .<Video>builder()
+                                .success(false)
+                                .message("Video Saving Failed")
+                                .build()
+                        )
+                );
     }
 }
