@@ -52,7 +52,7 @@ public class VideoServiceImpl implements VideoService {
                 logger.info(String.format("Creating the video directory: %s",videoDirPath.toAbsolutePath()));
             }
         } catch (IOException e) {
-            logger.error("Failed to create video directory:");
+            logger.error(e.getMessage());
             throw new RuntimeException(String.format("Failed to create video directory: %s", VIDEO_DIR), e);
         }
         //saving the video
@@ -63,7 +63,8 @@ public class VideoServiceImpl implements VideoService {
             Files.copy(videoFile.getInputStream(), savingPath);
         } catch (IOException e) {
             videoRepo.delete(video); //deleting the saved the video record.
-            logger.error(String.format("File(%s) saving failed, deleting the db record",video.getTitle()));
+            logger.debug(String.format("File(%s) saving failed, deleting the db record",video.getTitle()));
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
         return Optional.of(video);

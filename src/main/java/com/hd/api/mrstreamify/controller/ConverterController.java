@@ -2,6 +2,7 @@ package com.hd.api.mrstreamify.controller;
 
 import com.hd.api.mrstreamify.dto.ApiResponseDto;
 import com.hd.api.mrstreamify.entity.Video;
+import com.hd.api.mrstreamify.service.ConvertService;
 import com.hd.api.mrstreamify.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,25 +20,19 @@ public class ConverterController {
     VideoService videoSerivce;
     @PostMapping("/")
     public ResponseEntity<ApiResponseDto<Video>> SaveVideo(@RequestParam("video")MultipartFile video){
+        if(!ConvertService.isAllowedType(video)){
+           return ResponseEntity
+                   .badRequest()
+                   .body(ApiResponseDto.<Video>builder().success(false).message("Not an allowed file format.").build());
+        }
         Optional<Video> savedVideo =  videoSerivce.saveVideo(video);
         return savedVideo
                 .map(videoObj -> ResponseEntity
-                        .ok(ApiResponseDto
-                                .<Video>builder()
-                                .data(videoObj)
-                                .success(true)
-                                .message("Video Saved Successfully")
-                                .build()
-                        )
+                    .ok(ApiResponseDto.<Video>builder().data(videoObj).success(true).message("Video Saved Successfully.").build())
                 )
                 .orElseGet(()-> ResponseEntity
                         .internalServerError()
-                        .body(ApiResponseDto
-                                .<Video>builder()
-                                .success(false)
-                                .message("Video Saving Failed")
-                                .build()
-                        )
+                        .body(ApiResponseDto.<Video>builder().success(false).message("Video Saving Failed.").build())
                 );
     }
 }
