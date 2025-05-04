@@ -2,6 +2,7 @@ package com.hd.api.mrstreamify.service.impl;
 
 import com.hd.api.mrstreamify.entity.ChunkUploadStatus;
 import com.hd.api.mrstreamify.entity.Video;
+import com.hd.api.mrstreamify.exception.ChunkAlreadyUploadedException;
 import com.hd.api.mrstreamify.repo.VideoRepo;
 import com.hd.api.mrstreamify.service.ChunkUploadStatusService;
 import com.hd.api.mrstreamify.service.VideoService;
@@ -92,6 +93,10 @@ public class VideoServiceImpl implements VideoService {
             if(video.isEmpty()){
                 logger.error("VideoServiceImpl>saveVideoChunk():: No record Found with the given videoId({}) in the db.",videoId);
                 throw new EntityNotFoundException("Wrong Video Id.");
+            }
+            else{
+                if(chunkUploadStatus.isChunkAlreadyPresent(chunkIndex,videoId))
+                    throw new ChunkAlreadyUploadedException(chunkIndex,videoId.toString());
             }
         }
 

@@ -41,5 +41,7 @@ public interface ChunkUploadStatusService {
      * @return Optional ChunkUploadStatus.
      */
     Optional<ChunkUploadStatus> getChunkStatus(UUID videoId);
+
+    boolean isChunkAlreadyPresent(int chunkIndex, UUID videoId);
 }
 

@@ -34,8 +34,8 @@ public class ChunkUploadStatus {
     private boolean isChunksMerged;
 
     public void addNewChunk(int chunkIndex)throws IllegalArgumentException{
-        if(totalChunks<=chunkIndex && chunkIndex<0)
-            throw new IllegalArgumentException(String.format("ChunkUploadStatus>addNewChunk()::Invalid value for chunkIndex:%d",chunkIndex));
+        if(totalChunks<=chunkIndex || chunkIndex<0)
+            throw new IllegalArgumentException(String.format("Invalid value for chunkIndex:%d",chunkIndex));
         this.uploadedChunks.add(chunkIndex);
     }
     public boolean isAllChunksCollected(){

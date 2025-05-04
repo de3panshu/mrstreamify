@@ -12,13 +12,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ApiResponseDto<Video>> handleBadRequestExpcetion(BadRequestException ex){
+    public ResponseEntity<ApiResponseDto<Video>> handleBadRequestException(BadRequestException ex){
         logger.error("BadRequestException: {} - Data: {}", ex.getMessage(), ex.getData());
         return ResponseEntity.badRequest().body(ApiResponseDto.<Video>builder().message(ex.getMessage()).data((Video)ex.getData()).build());
     }
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponseDto<Video>> handleBadRequestExpcetion(Exception ex){
+    public ResponseEntity<ApiResponseDto<Video>> handleGlobalException(Exception ex){
         logger.error("Exception: {}", ex.getMessage());
         return ResponseEntity.badRequest().body(ApiResponseDto.<Video>builder().message(ex.getMessage()).build());
+    }
+    @ExceptionHandler(ChunkAlreadyUploadedException.class)
+    public ResponseEntity<ApiResponseDto<Video>> handleChunkAlreadyUploadedException(Exception ex){
+        logger.error("ChunkAlreadyUploadedException: {}", ex.getMessage());
+        return ResponseEntity.ok().body(ApiResponseDto.<Video>builder().message(ex.getMessage()).success(true).build());
     }
 }

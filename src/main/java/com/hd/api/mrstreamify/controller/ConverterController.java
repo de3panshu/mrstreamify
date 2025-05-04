@@ -39,11 +39,11 @@ public class ConverterController {
         Optional<Video> savedVideo =  videoSerivce.saveVideoChunk(video,videoId,chunkIndex,totalChunk);
         return savedVideo
                 .map(videoObj -> ResponseEntity
-                        .ok(ApiResponseDto.<Video>builder().data(videoObj).success(true).message("Video Saved Successfully.").build())
+                        .ok(ApiResponseDto.<Video>builder().data(videoObj).success(true).message("Chunk Saved Successfully.").build())
                 )
                 .orElseGet(()-> ResponseEntity
                         .internalServerError()
-                        .body(ApiResponseDto.<Video>builder().success(false).message("Video Saving Failed.").build())
+                        .body(ApiResponseDto.<Video>builder().success(false).message("Chunk Saving Failed.").build())
                 );
     }
 }

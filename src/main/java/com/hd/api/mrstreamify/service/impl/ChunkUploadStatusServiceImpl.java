@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ChunkUploadStatusServiceImpl implements ChunkUploadStatusService {
@@ -39,5 +41,12 @@ public class ChunkUploadStatusServiceImpl implements ChunkUploadStatusService {
     @Override
     public Optional<ChunkUploadStatus> getChunkStatus(UUID videoId) {
         return chunkStatusRepo.findById(videoId);
+    }
+
+    @Override
+    public boolean isChunkAlreadyPresent(final int chunkIndex, UUID videoId) {
+        AtomicBoolean isChunkPresent = new AtomicBoolean(false);
+        chunkStatusRepo.findById(videoId).ifPresent(chunkData->isChunkPresent.set(chunkData.getUploadedChunks().contains(chunkIndex)));
+        return isChunkPresent.get();
     }
 }

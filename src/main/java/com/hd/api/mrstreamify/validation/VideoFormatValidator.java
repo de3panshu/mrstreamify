@@ -18,7 +18,7 @@ public class VideoFormatValidator implements ConstraintValidator<ValidVideoForma
     private static final Logger logger = LogManager.getLogger(VideoFormatValidator.class);
     private String errorMessage;
     private static final List<String> ALLOWED_VIDEO_TYPES = Arrays.asList(
-            "video/mp4", "video/avi", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/webm"
+            "video/mp4", "video/avi", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/webm","application/octet-stream"
     );
     @Override
     public void initialize(ValidVideoFormat constraintAnnotation) {
