@@ -16,4 +16,9 @@ public class GlobalExceptionHandler {
         logger.error("BadRequestException: {} - Data: {}", ex.getMessage(), ex.getData());
         return ResponseEntity.badRequest().body(ApiResponseDto.<Video>builder().message(ex.getMessage()).data((Video)ex.getData()).build());
     }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponseDto<Video>> handleBadRequestExpcetion(Exception ex){
+        logger.error("Exception: {}", ex.getMessage());
+        return ResponseEntity.badRequest().body(ApiResponseDto.<Video>builder().message(ex.getMessage()).build());
+    }
 }

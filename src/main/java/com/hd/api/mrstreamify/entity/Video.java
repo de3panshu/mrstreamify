@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -25,4 +24,6 @@ public class Video {
 
     @CreationTimestamp
     private LocalDateTime uploadDate;
+
+    private String location;
 }

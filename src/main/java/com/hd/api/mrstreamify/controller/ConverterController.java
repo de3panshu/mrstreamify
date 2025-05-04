@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/convert")
@@ -27,6 +28,18 @@ public class ConverterController {
         return savedVideo
                 .map(videoObj -> ResponseEntity
                     .ok(ApiResponseDto.<Video>builder().data(videoObj).success(true).message("Video Saved Successfully.").build())
+                )
+                .orElseGet(()-> ResponseEntity
+                        .internalServerError()
+                        .body(ApiResponseDto.<Video>builder().success(false).message("Video Saving Failed.").build())
+                );
+    }
+    @PostMapping("/chunk")
+    public ResponseEntity<ApiResponseDto<Video>> SaveChunk(@RequestParam @ValidVideoFormat MultipartFile video, @RequestParam(required = false) UUID videoId, @RequestParam int chunkIndex, @RequestParam int totalChunk){
+        Optional<Video> savedVideo =  videoSerivce.saveVideoChunk(video,videoId,chunkIndex,totalChunk);
+        return savedVideo
+                .map(videoObj -> ResponseEntity
+                        .ok(ApiResponseDto.<Video>builder().data(videoObj).success(true).message("Video Saved Successfully.").build())
                 )
                 .orElseGet(()-> ResponseEntity
                         .internalServerError()
